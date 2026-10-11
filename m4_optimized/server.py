@@ -323,7 +323,7 @@ class M4RequestHandler(SimpleHTTPRequestHandler):
         except Exception as e:
             self._send_json({"success": False, "error": str(e)}, status=500)
 
-def run_server(port: int = 8080):
+def run_server(port: int = 7860):
     server_address = ("0.0.0.0", port)
     httpd = HTTPServer(server_address, M4RequestHandler)
     print(f"🚀 M4 Interactive UI Server running at: http://localhost:{port}")
@@ -334,5 +334,5 @@ def run_server(port: int = 8080):
         httpd.server_close()
 
 if __name__ == "__main__":
-    port = int(sys.argv[1]) if len(sys.argv) > 1 else 8080
+    port = int(sys.argv[1]) if len(sys.argv) > 1 else 7860
     run_server(port)

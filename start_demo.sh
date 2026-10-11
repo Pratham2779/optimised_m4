@@ -15,7 +15,7 @@ echo "    🚀 STARTING M4 MENTOR DEMONSTRATION ENVIRONMENT                     
 echo "================================================================================"
 echo "Remote GPU Host: $SSH_TARGET (Port $SSH_PORT)"
 echo "Neo4j AuraDB:    Configured via .env"
-echo "Local Web UI:    http://localhost:8080"
+echo "Local Web UI:    http://localhost:7860"
 echo "================================================================================"
 
 # 1. Check if Ollama is accessible locally on 11434
@@ -50,15 +50,28 @@ echo "🤖 Active models on Remote GPU:"
 curl -s http://127.0.0.1:11434/api/tags | grep -o '"name":"[^"]*"' | tr '\n' ' ' || echo "Ollama ready"
 echo ""
 
-# 3. Start Local UI Server
+# 3. Start Local UI Server on port 7860
 echo ""
-echo "🌐 Starting M4 Demonstration UI Server on http://localhost:8080..."
-pkill -f "ui/server.py 8080" || true
+echo "🌐 Starting M4 Demonstration UI Server on http://localhost:7860..."
+pkill -f "server.py 7860" || true
+pkill -f "server.py 8080" || true
 sleep 1
 
-VENV_PY="$SCRIPT_DIR/.venv/bin/python"
+VENV_PY="$SCRIPT_DIR/m4_optimized/.venv/bin/python"
+if [ ! -f "$VENV_PY" ]; then
+    VENV_PY="$SCRIPT_DIR/.venv/bin/python"
+fi
 if [ ! -f "$VENV_PY" ]; then
     VENV_PY="python3"
 fi
 
-exec "$VENV_PY" "$SCRIPT_DIR/ui/server.py" 8080
+if [ -f "$SCRIPT_DIR/m4_optimized/ui/server.py" ]; then
+    SERVER_PY="$SCRIPT_DIR/m4_optimized/ui/server.py"
+elif [ -f "$SCRIPT_DIR/ui/server.py" ]; then
+    SERVER_PY="$SCRIPT_DIR/ui/server.py"
+else
+    SERVER_PY="$SCRIPT_DIR/server.py"
+fi
+
+exec "$VENV_PY" "$SERVER_PY" 7860
+

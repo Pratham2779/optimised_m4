@@ -6,10 +6,20 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR"
+if [ -d "$SCRIPT_DIR/m4_optimized" ]; then
+    PROJECT_DIR="$SCRIPT_DIR/m4_optimized"
+else
+    PROJECT_DIR="$SCRIPT_DIR"
+fi
+cd "$PROJECT_DIR"
+
+UI_PORT="${UI_PORT:-7860}"
 
 echo "================================================================================"
 echo "    🚀 M4 META-MEMORY: 1-CLICK ALL-IN-ONE SETUP & UI LAUNCHER                   "
+echo "================================================================================"
+echo "Working directory: $(pwd)"
+echo "Target UI Port:    $UI_PORT (Avoids Colab internal port 8080 conflict)"
 echo "================================================================================"
 
 # 1. GPU Verification
@@ -98,9 +108,15 @@ LOG_LEVEL=INFO
 EOF
 echo "✓ .env configured with Neo4j AuraDB credentials."
 
-# 6. Start UI Server on Port 8080
+# Also copy .env to parent if in subfolder
+if [ "$PROJECT_DIR" != "$SCRIPT_DIR" ]; then
+    cp .env "$SCRIPT_DIR/.env" 2>/dev/null || true
+fi
+
+# 6. Start UI Server on Port 7860
 echo ""
-echo "🌐 [6/6] Launching Demonstration UI Server on Port 8080..."
+echo "🌐 [6/6] Launching Demonstration UI Server on Port $UI_PORT..."
+pkill -f "server.py $UI_PORT" || true
 pkill -f "server.py 8080" || true
 sleep 1
 
@@ -109,30 +125,36 @@ if [ -f "server.py" ]; then
     SERVER_SCRIPT="server.py"
 elif [ -f "ui/server.py" ]; then
     SERVER_SCRIPT="ui/server.py"
+elif [ -f "$PROJECT_DIR/server.py" ]; then
+    SERVER_SCRIPT="$PROJECT_DIR/server.py"
+elif [ -f "$PROJECT_DIR/ui/server.py" ]; then
+    SERVER_SCRIPT="$PROJECT_DIR/ui/server.py"
 else
     SERVER_SCRIPT="server.py"
 fi
 
-nohup python3 "$SERVER_SCRIPT" 8080 > /tmp/m4_ui.log 2>&1 &
+nohup python3 "$SERVER_SCRIPT" "$UI_PORT" > /tmp/m4_ui.log 2>&1 &
 SERVER_PID=$!
 disown $SERVER_PID 2>/dev/null || true
 sleep 2
 
 # Verify UI server is up
-if curl -s http://localhost:8080/api/status > /dev/null 2>&1; then
-    echo "✓ UI HTTP server running on port 8080."
-else
-    echo "⚠️ UI server starting, checking log: /tmp/m4_ui.log"
-fi
+for attempt in {1..10}; do
+    if curl -s "http://localhost:$UI_PORT/api/status" > /dev/null 2>&1; then
+        echo "✓ UI HTTP server running on port $UI_PORT."
+        break
+    fi
+    sleep 1
+done
 
 # Set up localtunnel for public URL without touching cloudflared
 PUBLIC_URL=""
 if command -v npx &> /dev/null; then
-    echo "Starting public tunnel via localtunnel..."
-    pkill -f "lt --port 8080" || true
+    echo "Starting public tunnel via localtunnel on port $UI_PORT..."
+    pkill -f "lt --port $UI_PORT" || true
     sleep 1
-    nohup npx -y localtunnel --port 8080 > /tmp/localtunnel.log 2>&1 &
-    sleep 3
+    nohup npx -y localtunnel --port "$UI_PORT" > /tmp/localtunnel.log 2>&1 &
+    sleep 4
     PUBLIC_URL="$(grep -o 'https://[-a-zA-Z0-9]*\.loca\.lt' /tmp/localtunnel.log | tail -n 1 || true)"
 fi
 
@@ -143,17 +165,19 @@ echo "==========================================================================
 if [ -n "$PUBLIC_URL" ]; then
     echo "  👉 PUBLIC URL (Localtunnel): $PUBLIC_URL"
 fi
-echo "  👉 DIRECT BROWSER ACCESS VIA SSH: "
-echo "     Run on your laptop terminal:  ssh -N -L 8080:localhost:8080 root@colab.prathameshgurav.site"
-echo "     Then open in browser:        http://localhost:8080"
-echo ""
-echo "  👉 OR VIEW INSIDE COLAB NOTEBOOK CELL:"
+echo "  👉 VIEW INSIDE COLAB NOTEBOOK (RECOMMENDED):"
+echo "     Run this in a Colab code cell:"
 echo "     from google.colab import output"
-echo "     output.serve_kernel_port_as_iframe(8080, height=850)"
+echo "     output.serve_kernel_port_as_iframe($UI_PORT, height=850)"
+echo ""
+echo "  👉 DIRECT BROWSER ACCESS VIA SSH:"
+echo "     Run on your laptop terminal:  ssh -N -L $UI_PORT:localhost:$UI_PORT root@colab.prathameshgurav.site"
+echo "     Then open in browser:        http://localhost:$UI_PORT"
 echo ""
 echo "  👉 AURADB CLOUD:      Connected to neo4j+s://8d2d5bc7.databases.neo4j.io"
 echo "  👉 GPU MODELS:        qwen2.5:7b-instruct + all-minilm (CUDA accelerated)"
 echo "================================================================================"
 echo ""
 echo "Server logs: /tmp/m4_ui.log"
+
 
