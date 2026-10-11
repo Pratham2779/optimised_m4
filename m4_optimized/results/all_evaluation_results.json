@@ -1,0 +1,303 @@
+{
+  "timestamp": "2026-10-11T07:34:08.248344+00:00",
+  "config": {
+    "neo4j_uri": "memory",
+    "llm_model": "qwen2.5:7b-instruct",
+    "embedding_model": "all-minilm"
+  },
+  "locomo": {
+    "summary": {
+      "Single-Hop": {
+        "count": 2,
+        "avg_f1": 9.09,
+        "avg_bleu4": 0.79,
+        "avg_rouge_l": 8.34,
+        "avg_tokens": 80,
+        "avg_latency": 3.28
+      },
+      "Temporal": {
+        "count": 2,
+        "avg_f1": 0.0,
+        "avg_bleu4": 0.0,
+        "avg_rouge_l": 0.0,
+        "avg_tokens": 84,
+        "avg_latency": 3.57
+      },
+      "Multi-Hop": {
+        "count": 2,
+        "avg_f1": 3.12,
+        "avg_bleu4": 0.33,
+        "avg_rouge_l": 3.03,
+        "avg_tokens": 91,
+        "avg_latency": 4.57
+      },
+      "Open Domain": {
+        "count": 2,
+        "avg_f1": 10.0,
+        "avg_bleu4": 1.39,
+        "avg_rouge_l": 9.09,
+        "avg_tokens": 57,
+        "avg_latency": 3.19
+      },
+      "overall_avg_context_tokens": 78
+    },
+    "logs": [
+      {
+        "benchmark": "LoCoMo",
+        "category": "Single-Hop",
+        "question": "What did Caroline research?",
+        "gold": "Adoption agencies",
+        "pred": "Not enough information.",
+        "retrieved_memories": [
+          "Caroline is learning to play the piano.",
+          "Melanie is taking a pottery class.",
+          "Caroline attended an LGBTQ+ counseling workshop last Friday, gaining insights into therapeutic methods for trans people.",
+          "Caroline's own journey and support from others motivated her to pursue a career in counseling. ",
+          "Caroline has been transitioning for three years.",
+          "Melanie has been married for five years."
+        ],
+        "f1": 0.0,
+        "bleu1": 0.0,
+        "bleu4": 0.0,
+        "rouge_l": 0.0,
+        "tokens": 75,
+        "latency": 3.98,
+        "bertscore": 63.01
+      },
+      {
+        "benchmark": "LoCoMo",
+        "category": "Single-Hop",
+        "question": "What career path has Caroline decided to persue?",
+        "gold": "counseling or mental health for Transgender people",
+        "pred": "Caroline has decided to pursue a career path in counseling, with a focus on supporting trans people.",
+        "retrieved_memories": [
+          "Caroline is interested in working as a counselor to support individuals with similar issues.",
+          "Caroline is considering a career in counseling, focusing on trans people.",
+          "Caroline wants to use her story to help others through counseling and mental health work.",
+          "Caroline plans to continue her education and explore career options in counseling or mental health.",
+          "Melanie and her family plan to go camping during summer break."
+        ],
+        "f1": 18.18,
+        "bleu1": 13.33,
+        "bleu4": 1.57,
+        "rouge_l": 16.67,
+        "tokens": 85,
+        "latency": 2.58,
+        "bertscore": 75.1
+      },
+      {
+        "benchmark": "LoCoMo",
+        "category": "Temporal",
+        "question": "When did Caroline go to a pride parade during the summer?",
+        "gold": "The week before 3 July 2023",
+        "pred": "Not enough information.",
+        "retrieved_memories": [
+          "Melanie completed a charity race for mental health awareness.",
+          "Caroline attended a LGBTQ support group yesterday.",
+          "Caroline attended an LGBTQ+ counseling workshop last Friday, gaining insights into therapeutic methods for trans people.",
+          "Caroline has been transitioning for three years.",
+          "Melanie has been married for five years.",
+          "Caroline is attending a transgender conference this month.",
+          "Caroline aims to adopt children through an inclusive agency supporting LGBTQ+ folks."
+        ],
+        "f1": 0.0,
+        "bleu1": 0.0,
+        "bleu4": 0.0,
+        "rouge_l": 0.0,
+        "tokens": 85,
+        "latency": 4.19,
+        "bertscore": 58.08
+      },
+      {
+        "benchmark": "LoCoMo",
+        "category": "Temporal",
+        "question": "When did Caroline give a speech at a school?",
+        "gold": "The week before 9 June 2023",
+        "pred": "Not enough information.",
+        "retrieved_memories": [
+          "Melanie completed a charity race for mental health awareness.",
+          "Caroline attended an LGBTQ+ counseling workshop last Friday, gaining insights into therapeutic methods for trans people.",
+          "Caroline aims to adopt children through an inclusive agency supporting LGBTQ+ folks.",
+          "The support group made Caroline feel accepted and gave her courage to embrace herself.",
+          "Caroline has been transitioning for three years.",
+          "Melanie has been married for five years."
+        ],
+        "f1": 0.0,
+        "bleu1": 0.0,
+        "bleu4": 0.0,
+        "rouge_l": 0.0,
+        "tokens": 84,
+        "latency": 2.94,
+        "bertscore": 58.57
+      },
+      {
+        "benchmark": "LoCoMo",
+        "category": "Multi-Hop",
+        "question": "What fields would Caroline be likely to pursue in her educaton?",
+        "gold": "Psychology, counseling certification",
+        "pred": "Caroline would likely pursue education and training in counseling or mental health fields, with a focus on supporting trans individuals. She plans to continue her education to enter these fields.",
+        "retrieved_memories": [
+          "Caroline is interested in working as a counselor to support individuals with similar issues.",
+          "Caroline is considering a career in counseling, focusing on trans people.",
+          "Caroline wants to use her story to help others through counseling and mental health work.",
+          "Caroline plans to continue her education and explore career options in counseling or mental health.",
+          "Melanie and her family plan to go camping during summer break."
+        ],
+        "f1": 6.25,
+        "bleu1": 3.45,
+        "bleu4": 0.65,
+        "rouge_l": 6.06,
+        "tokens": 85,
+        "latency": 3.81,
+        "bertscore": 73.92
+      },
+      {
+        "benchmark": "LoCoMo",
+        "category": "Multi-Hop",
+        "question": "Would Caroline still want to pursue counseling as a career if she hadn't received support growing up?",
+        "gold": "Likely no",
+        "pred": "Not enough information.\n\nThe memories provided do not give details about Caroline's experiences without support during her upbringing. Therefore, it's not possible to determine if she would still want to pursue counseling as a career based on the given information.",
+        "retrieved_memories": [
+          "The support group Caroline attended was inspiring and had transgender stories.",
+          "The support group made Caroline feel accepted and gave her courage to embrace herself.",
+          "Caroline receives support from friends and mentors in her adoption journey.",
+          "Caroline is interested in working as a counselor to support individuals with similar issues.",
+          "Caroline is considering a career in counseling, focusing on trans people.",
+          "Caroline wants to use her story to help others through counseling and mental health work."
+        ],
+        "f1": 0.0,
+        "bleu1": 0.0,
+        "bleu4": 0.0,
+        "rouge_l": 0.0,
+        "tokens": 98,
+        "latency": 5.33,
+        "bertscore": 65.8
+      },
+      {
+        "benchmark": "LoCoMo",
+        "category": "Open Domain",
+        "question": "What type of individuals does the adoption agency Caroline is considering support?",
+        "gold": "LGBTQ+ individuals",
+        "pred": "The adoption agency Caroline is considering supports LGBTQ+ families.",
+        "retrieved_memories": [
+          "Caroline is considering an adoption agency that supports LGBTQ+ families.",
+          "Melanie prioritizes self-care to better care for her family.",
+          "Melanie went camping with her family in the mountains last week.",
+          "Melanie values family time and the importance of creating shared experiences. "
+        ],
+        "f1": 20.0,
+        "bleu1": 12.5,
+        "bleu4": 2.78,
+        "rouge_l": 18.18,
+        "tokens": 53,
+        "latency": 2.98,
+        "bertscore": 82.67
+      },
+      {
+        "benchmark": "LoCoMo",
+        "category": "Open Domain",
+        "question": "What are Caroline's plans for the summer?",
+        "gold": "researching adoption agencies",
+        "pred": "Not enough information.",
+        "retrieved_memories": [
+          "Caroline plans to continue her education and explore career options in counseling or mental health.",
+          "Melanie and her family plan to go camping during summer break.",
+          "Caroline has been transitioning for three years.",
+          "Melanie has been married for five years.",
+          "Caroline is attending a transgender conference this month."
+        ],
+        "f1": 0.0,
+        "bleu1": 0.0,
+        "bleu4": 0.0,
+        "rouge_l": 0.0,
+        "tokens": 62,
+        "latency": 3.4,
+        "bertscore": 67.13
+      }
+    ]
+  },
+  "msc": {
+    "summary": {
+      "episodes_evaluated": 2,
+      "avg_bleu4": 0.69,
+      "avg_rouge_l": 6.78,
+      "avg_bertscore": 72.25
+    },
+    "logs": [
+      {
+        "benchmark": "MSC",
+        "dialogue_id": 0,
+        "query": "In dialogue with Speaker 2, what should be the response to: 'How did it go with the gym signup?'",
+        "gold": "It went pretty well. It actually went better than I expected.  Signing up for the gym is just step one.",
+        "pred": "Speaker 2 signed up for and has now joined a new 24-hour gym near their location later today. The travel time from their previous location has been reduced to less than an hour, down from an hour away.",
+        "retrieved_memories": [
+          "Speaker 1 works out alone at the gym, focusing on weights and doing arm day.",
+          "Speaker 2 is considering joining a local gym with more options than just running.",
+          "A new gym has been built in a nearby small town, reducing the travel time from an hour to less than an hour.",
+          "Speaker 2 is signing up for and has now joined a new 24-hour gym near their location later today."
+        ],
+        "bleu1": 11.76,
+        "bleu4": 1.38,
+        "rouge_l": 13.56,
+        "latency": 3.87,
+        "bertscore": 71.63
+      },
+      {
+        "benchmark": "MSC",
+        "dialogue_id": 1,
+        "query": "In dialogue with Speaker 2, what should be the response to: 'Did you name your chickens?'",
+        "gold": "No, I don't. My daughter did. Can't figure out how she distinguish them. ",
+        "pred": "Not enough information.",
+        "retrieved_memories": [
+          "The support group made Caroline feel accepted and gave her courage to embrace herself.",
+          "Caroline attended a LGBTQ support group yesterday.",
+          "Speaker 1 is focused on both music and academics.",
+          "Melanie is taking a pottery class.",
+          "The farmer has 12 chickens and plans to get more."
+        ],
+        "bleu1": 0.0,
+        "bleu4": 0.0,
+        "rouge_l": 0.0,
+        "latency": 3.86,
+        "bertscore": 72.87
+      }
+    ]
+  },
+  "baselines": {
+    "locomo": {
+      "MemGPT": {
+        "multi_hop": 10.44,
+        "temporal": 4.21,
+        "open_domain": 13.42,
+        "single_hop": 9.56,
+        "context_tokens": 16953
+      },
+      "Mem0": {
+        "multi_hop": 17.81,
+        "temporal": 12.33,
+        "open_domain": 12.33,
+        "single_hop": 29.04,
+        "context_tokens": 1484
+      },
+      "M4_Target": {
+        "multi_hop": 25.05,
+        "temporal": 26.02,
+        "open_domain": 16.7,
+        "single_hop": 25.61,
+        "context_tokens": 2474
+      }
+    },
+    "msc": {
+      "Standard_Full_Context": {
+        "bleu4": 0.82,
+        "rouge_l": 11.2,
+        "bertscore": 41.5
+      },
+      "M4_Target": {
+        "bleu4": 1.26,
+        "rouge_l": 14.15,
+        "bertscore": 48.29
+      }
+    }
+  }
+}
